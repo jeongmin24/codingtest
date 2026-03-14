@@ -17,20 +17,21 @@ public class Main {
     }
 
     public static void dfs(int r, int c, int m, int curSum) {
-        if(m==4) {
 
+        if(m==4) {
             ans = Math.max(ans, curSum);
             return;
         }
 
         for(int d=0; d<4; d++) {
-            int nr = r + dr[d];
-            int nc = c + dc[d];
+            int nr = r+dr[d];
+            int nc = c+dc[d];
+
             if(isWall(nr,nc)) continue;
             if(visited[nr][nc]) continue;
 
             visited[nr][nc] = true;
-            dfs(nr, nc, m+1, curSum + grid[nr][nc]);
+            dfs(nr,nc,m+1,curSum+grid[nr][nc]);
             visited[nr][nc] = false;
 
         }
@@ -38,42 +39,30 @@ public class Main {
     }
 
     public static void other(int r, int c) {
-        int sum = grid[r][c];
 
-        // 상,좌,우
-        if(!isWall(r-1,c) && !isWall(r,c-1) && !isWall(r,c+1)) {
-            sum += grid[r-1][c];
-            sum += grid[r][c-1];
-            sum += grid[r][c+1];
-            ans = Math.max(sum, ans);
-        }
+        for(int skip=0; skip<4; skip++) {
+            int sum = grid[r][c];
+            boolean valid = true;
 
-        // 좌,우,하
-        if(!isWall(r,c-1) && !isWall(r,c+1) && !isWall(r+1,c)) {
-            sum = grid[r][c];
-            sum += grid[r][c-1];
-            sum += grid[r][c+1];
-            sum += grid[r+1][c];
-            ans = Math.max(sum, ans);
-        }
+            for(int d=0; d<4; d++) {
 
-        // 상,우,하
-        if(!isWall(r-1,c) && !isWall(r,c+1) && !isWall(r+1,c)) {
-            sum = grid[r][c];
-            sum += grid[r-1][c];
-            sum += grid[r][c+1];
-            sum += grid[r+1][c];
-            ans = Math.max(sum,ans);
+                if(d==skip) continue;
 
-        }
+                int nr = r+dr[d];
+                int nc = c+dc[d];
 
-        // 상,좌,하
-        if(!isWall(r-1,c) && !isWall(r+1,c) && !isWall(r,c-1)) {
-            sum = grid[r][c];
-            sum += grid[r-1][c];
-            sum += grid[r+1][c];
-            sum += grid[r][c-1];
-            ans = Math.max(sum, ans);
+                if(isWall(nr,nc)) {
+                    valid = false;
+                    break;
+                }
+
+                sum += grid[nr][nc];
+            }
+
+            if(valid) {
+                ans = Math.max(ans, sum);
+            }
+
         }
 
     }
@@ -102,7 +91,7 @@ public class Main {
             for(int j=0; j<M; j++) {
 
                 visited[i][j] = true;
-                dfs(i,j,1, grid[i][j]);
+                dfs(i,j,1,grid[i][j]);
                 visited[i][j] = false;
                 other(i,j);
 
