@@ -1,4 +1,3 @@
-
 import java.util.*;
 import java.io.*;
 
@@ -50,6 +49,9 @@ public class Main {
 		while(!q.isEmpty()) {
 			
 			Node cur = q.poll();
+			if(grid[cur.r][cur.c]==0) {
+				bfsTime = Math.max(bfsTime, cur.time);
+			}
 			
 			for(int d=0; d<4; d++) {
 				int nr = cur.r + dr[d];
@@ -58,11 +60,6 @@ public class Main {
 				if(nr<0 || nr>=N || nc<0 || nc>=N) continue;
 				if(visited[nr][nc]) continue;
 				if(grid[nr][nc] == 1) continue;
-				
-				// 실제로 nextTime은 cur.time+1 
-				if(grid[nr][nc] == 0) {
-					bfsTime = Math.max(bfsTime, cur.time+1);
-				}
 				
 				q.offer(new Node(nr, nc, cur.time+1));
 				visited[nr][nc] = true;
