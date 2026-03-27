@@ -107,15 +107,16 @@ public class Main {
 		}
 		baby = new Shark(babyR, babyC, 2, 0);
 		
+		// 먹을수 있는 물고기 
+		PriorityQueue<Fish> pq = new PriorityQueue<>();
 		int time = 0;
+		
 		while(true) {
-			
-			// 먹을수 있는 물고기 
-			PriorityQueue<Fish> pq = new PriorityQueue<>();
 			
 			for(int i=0; i<N; i++) {
 				for(int j=0; j<N; j++) {
 					if(grid[i][j] !=0 && grid[i][j] < baby.size) {
+						// 1. 도달 가능하지 않은 경우 -1이 리턴됨 이 경우는 넣으면 안됨 
 						int dist = bfs(i,j);
 						if(dist != -1) {
 							pq.add(new Fish(i, j, dist));
@@ -135,13 +136,13 @@ public class Main {
 			baby.c = eat.c;
 			time += eat.dist;
 			
-			// 먹은 물고기 처리 
+			// 2. 먹은 물고기 처리!!
 			grid[eat.r][eat.c] = 0;
 			
 			
 			if(baby.eat == baby.size) {
 				baby.size++;
-				// 커진 뒤 먹은 횟수는 다시 0으로
+				// 3. 커진 뒤 먹은 횟수는 다시 0으로
 				baby.eat = 0;
 			}
 			
