@@ -9,17 +9,8 @@ public class Main {
 	static int N;
 	static int M;
 	
-	static class Taxi {
-		int r;
-		int c;
-		int gas;
-		
-		public Taxi(int r, int c, int gas) {
-			this.r = r;
-			this.c = c;
-			this.gas = gas;
-		}
-	}
+	static int taxiR, taxiC;
+	static int fuel;
 	
 	static int[][] map;
 	
@@ -107,7 +98,7 @@ public class Main {
 		
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
+		fuel = Integer.parseInt(st.nextToken());
 		map = new int[N][N];
 		
 		for(int i=0; i<N; i++) {
@@ -118,10 +109,10 @@ public class Main {
 		}
 		
 		st = new StringTokenizer(br.readLine());
-		int tr = Integer.parseInt(st.nextToken())-1;
-		int tc = Integer.parseInt(st.nextToken())-1;
+		taxiR = Integer.parseInt(st.nextToken())-1;
+		taxiC = Integer.parseInt(st.nextToken())-1;
 		
-		Taxi taxi = new Taxi(tr, tc, K);
+		
 		PriorityQueue<Person> pq = new PriorityQueue<>();
 		
 		for(int i=0; i<M; i++) {
@@ -132,7 +123,7 @@ public class Main {
 			int er = Integer.parseInt(st.nextToken())-1;
 			int ec = Integer.parseInt(st.nextToken())-1;
 			
-			int dist = bfs(taxi.r, taxi.c, pr, pc);
+			int dist = bfs(taxiR, taxiC, pr, pc);
 			if(dist!=-1) {
 				pq.add(new Person(pr, pc, er, ec, dist));
 			} else {
@@ -147,40 +138,40 @@ public class Main {
 			
 			Person cur = pq.poll();
 			
-			if(cur.dist > taxi.gas) {
+			if(cur.dist > fuel) {
 				ans = -1;
 				flag = false;
 				break;
 			}
 			
-			taxi.gas -= cur.dist;
-			taxi.r = cur.pr;
-			taxi.c = cur.pc;
+			fuel -= cur.dist;
+			taxiR = cur.pr;
+			taxiC = cur.pc;
 			
-			int dist = bfs(taxi.r, taxi.c, cur.er, cur.ec);
+			int dist = bfs(taxiR, taxiC, cur.er, cur.ec);
 			
 			// 도착지로 갈수 없는 경우 ? 
 			if(dist == -1) {
 				ans = -1;
 				flag = false;
 				break;
-			} else if ( dist > taxi.gas) { // 도착지에 가다가 가스가 떨어지는 경우 
+			} else if ( dist > fuel) { // 도착지에 가다가 가스가 떨어지는 경우 
 				ans = -1;
 				flag = false;
 				break;
 			}
 			
-			taxi.r = cur.er;
-			taxi.c = cur.ec;
-			taxi.gas -= dist;
-			taxi.gas += dist*2;
+			taxiR = cur.er;
+			taxiC = cur.ec;
+			fuel -= dist;
+			fuel += dist*2;
 			
 			int size = pq.size();
 			PriorityQueue<Person> tmp = new PriorityQueue<>();
 			
 			for(int i=0; i<size; i++) {
 				Person p = pq.poll();
-				int tdist = bfs(taxi.r, taxi.c, p.pr, p.pc);
+				int tdist = bfs(taxiR, taxiC, p.pr, p.pc);
 				if(tdist == -1) {
 					p.dist = Integer.MAX_VALUE;
 				} else {
@@ -197,7 +188,7 @@ public class Main {
 		}
 		
 		if(flag) {
-			ans = taxi.gas;
+			ans = fuel;
 		}
 		
 		System.out.println(ans);
