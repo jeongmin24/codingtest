@@ -29,16 +29,17 @@ public class Main {
 		for(int i=0; i<2; i++) {
 			for(int j=0; j<6; j++) {
 				int n = room[i][j];
-				if(n > K) {
-					count += n/K + n%K;
-				} else if (n==0) {
+				if(n>0) {
+					count += n / K;
 					
-				} else {
-					count++;
+					if(n%K>0) {
+						count++;
+					}
 				}
 			}
 		}
 		
 		System.out.println(count);
+	
 	}
 }
